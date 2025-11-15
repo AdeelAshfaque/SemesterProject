@@ -1,10 +1,10 @@
 package player;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class Playlist {
-    private List<Song> songs = new ArrayList<>();
+    private LinkedList<Song> songs = new LinkedList<>();
 
     public void addSong(Song song) {
         songs.add(song);

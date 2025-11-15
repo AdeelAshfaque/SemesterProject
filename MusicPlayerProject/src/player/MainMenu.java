@@ -1,25 +1,31 @@
 package player;
 
+import java.io.File;
 import java.util.Scanner;
 
 public class MainMenu {
 
     private static Playlist playlist = new Playlist();
     private static MusicPlayer player = new MusicPlayer();
-    private static int currentIndex = -1;  // keeps track of the currently playing song
+    private static int currentIndex = -1;
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        playlist.addSong(new Song("Song1", "Eminem", "songs/song1.mp3"));
-        playlist.addSong(new Song("Song2", "Artist2", "songs/song2.mp3"));
+        File folder = new File("songs");
+        File[] listOfFiles = folder.listFiles((dir, name) -> name.endsWith(".mp3"));
+        if (listOfFiles != null) {
+            for (File file : listOfFiles) {
+                playlist.addSong(new Song(file.getName(), "Unknown", file.getPath()));
+            }
+        }
 
         while (true) {
             System.out.println("\n=== Music Player Menu ===");
             System.out.println("1. Play Song");
             System.out.println("2. Stop Song");
             System.out.println("3. Show Playlist");
-            System.out.println("4. Next Song");
+            System.out.println("4. Next Song"); 
             System.out.println("5. Previous Song");
             System.out.println("6. Exit");
             System.out.print("Choose: ");
@@ -31,11 +37,10 @@ public class MainMenu {
                     System.out.print("Enter song number: ");
                     int songNumber = scanner.nextInt();
                     if (songNumber >= 1 && songNumber <= playlist.getSongs().size()) {
-                        currentIndex = songNumber - 1;   // store currently playing index
+                        currentIndex = songNumber - 1;
                         Song selectedSong = playlist.getSongs().get(currentIndex);
                         player.stopSong();
                         player.playSong(selectedSong.getFilepath());
-
                     } else {
                         System.out.println("Invalid selection.");
                     }
@@ -47,7 +52,6 @@ public class MainMenu {
                         currentIndex++;
                         Song nextSong = playlist.getSongs().get(currentIndex);
                         player.stopSong();
-
                         player.playSong(nextSong.getFilepath());
                     } else {
                         System.out.println("No next song.");
@@ -58,7 +62,6 @@ public class MainMenu {
                         currentIndex--;
                         Song prevSong = playlist.getSongs().get(currentIndex);
                         player.stopSong();
-
                         player.playSong(prevSong.getFilepath());
                     } else {
                         System.out.println("No previous song.");
